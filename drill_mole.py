@@ -241,11 +241,12 @@ class DrillMole:
 
         new_wear = self._drill_wear
         if rule.wear_per_km > 0:
-            new_wear = _round(self._drill_wear + distance * rule.wear_per_km)
-            if new_wear > _MAX_LEVEL:
+            raw_wear = self._drill_wear + distance * rule.wear_per_km
+            if raw_wear > _MAX_LEVEL:
                 raise DrillMoleDrillWorn("drill is worn out")
+            new_wear = _round(raw_wear)
 
-        if fuel_cost - self._fuel > _EPSILON:
+        if self._fuel == 0 or fuel_cost - self._fuel > _EPSILON:
             raise DrillMoleNoFuel(
                 f"not enough fuel: required {fuel_cost:g}, have {self._fuel:g}"
             )
